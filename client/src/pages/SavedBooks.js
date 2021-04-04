@@ -26,9 +26,6 @@ const SavedBooks = () => {
     try {
       await deleteBook({ variables: { bookId } });
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
       removeBookId(bookId);
 
     } catch (err) {
