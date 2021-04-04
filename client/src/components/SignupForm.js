@@ -7,14 +7,13 @@ import { ADD_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 
 const SignupForm = () => {
+  const [addUser, {error}] = useMutation(ADD_USER);
   // set initial form state
   const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '' });
   // set state for form validation
   const [validated] = useState(false);
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
-
-  const [addUser] = useMutation(ADD_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -25,11 +24,11 @@ const SignupForm = () => {
     event.preventDefault();
 
     // check if form has everything (as per react-bootstrap docs)
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+    // const form = event.currentTarget;
+    // if (form.checkValidity() === false) {
+    //   event.preventDefault();
+    //   event.stopPropagation();
+    // }
 
     try {
       const { data } = await addUser({
@@ -38,8 +37,9 @@ const SignupForm = () => {
 
       Auth.login(data.addUser.token);
       
-    } catch(err) {
-      console.error(err)
+    } catch(e) {
+      console.error(e);
+      setShowAlert(true);
     };
 
     setUserFormData({
@@ -102,6 +102,7 @@ const SignupForm = () => {
           variant='success'>
           Submit
         </Button>
+        {error && <div>Not able to sign up!</div>}
       </Form>
     </>
   );
